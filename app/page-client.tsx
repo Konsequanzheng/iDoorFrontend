@@ -14,6 +14,8 @@ interface BookingResult {
   bookingId: string;
   fromDate?: string;
   toDate?: string;
+  checkInTime?: string;
+  checkOutTime?: string;
 }
 
 type ViewState =
@@ -76,7 +78,7 @@ export default function HomeClient({
         <BookingIdForm onSubmit={handleSubmit} error="Booking not found" />
       );
     case "not_started":
-      return <BookingNotStarted fromDate={state.data.fromDate!} />;
+      return <BookingNotStarted fromDate={state.data.fromDate!} checkInTime={state.data.checkInTime!} />;
     case "expired":
       return <BookingExpired />;
     case "valid":
@@ -185,12 +187,16 @@ function BookingIdForm({
   );
 }
 
-function BookingNotStarted({ fromDate }: { fromDate: string }) {
+function BookingNotStarted({ fromDate, checkInTime }: { fromDate: string; checkInTime: string }) {
   const date = new Date(fromDate).toLocaleDateString(undefined, {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
+  });
+  const time = new Date(`1970-01-01T${checkInTime}`).toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   return (
@@ -220,7 +226,7 @@ function BookingNotStarted({ fromDate }: { fromDate: string }) {
           color: "var(--color-text-tertiary, #999)",
         }}
       >
-        Check back on {date}.
+        Check back on {date} at {time}.
       </p>
     </div>
   );
