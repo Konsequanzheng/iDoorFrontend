@@ -8,6 +8,13 @@
       "when": 1776453534029,
       "tag": "0000_colossal_cobalt_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776957459853,
+      "tag": "0001_public_warbird",
+      "breakpoints": true
     }
   ]
 }
