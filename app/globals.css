@@ -16,11 +16,11 @@
   --btn-secondary-text: #222222;
   --btn-secondary-border: #dddddd;
   --btn-hover-opacity: 0.85;
-  --btn-press-scale: 0.97;
+  --btn-press-scale: 0.96;
   --spinner-accent: #ff385c;
-  --radius-card: 12px;
-  --radius-btn: 8px;
-  --radius-input: 8px;
+  --radius-card: 24px;
+  --radius-btn: 12px;
+  --radius-input: 12px;
   --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 

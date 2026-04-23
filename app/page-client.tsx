@@ -98,8 +98,8 @@ function Loading() {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <svg
-        width="32"
-        height="32"
+        width="40"
+        height="40"
         viewBox="0 0 15 15"
         fill="none"
         className="animate-spin"
@@ -140,28 +140,28 @@ function BookingIdForm({
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4">
-      <p className="m-0 text-sm text-content-secondary">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-6 px-6">
+      <p className="m-0 text-lg text-content-secondary font-medium">
         Enter your booking ID to continue
       </p>
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <form onSubmit={handleSubmit} className="flex gap-3 w-full max-w-sm">
         <input
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="e.g. abc123"
-          className="px-4 py-2.5 w-[200px] text-sm outline-none bg-input-bg text-foreground border-[0.5px] border-border-default rounded-(--radius-input) placeholder:text-content-tertiary"
+          className="flex-1 px-5 py-4 text-base outline-none bg-input-bg text-foreground border border-border-default rounded-(--radius-input) placeholder:text-content-tertiary"
         />
         <button
           type="submit"
           disabled={!value.trim()}
-          className="px-5 py-2.5 rounded-(--radius-btn) border-none bg-btn-primary-bg text-btn-primary-text text-sm font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 transition-opacity"
+          className="px-8 py-4 rounded-(--radius-btn) border-none bg-btn-primary-bg text-btn-primary-text text-base font-semibold cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 transition-opacity"
         >
           Go
         </button>
       </form>
       {error && (
-        <p className="m-0 text-[13px] text-content-danger">{error}</p>
+        <p className="m-0 text-base text-content-danger">{error}</p>
       )}
     </div>
   );
@@ -180,11 +180,11 @@ function BookingNotStarted({ fromDate, checkInTime }: { fromDate: string; checkI
   });
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-2 px-4">
-      <p className="m-0 text-[15px] text-content-secondary">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-3 px-6">
+      <p className="m-0 text-lg text-content-secondary font-medium">
         Your booking window hasn&apos;t started yet.
       </p>
-      <p className="m-0 text-[13px] text-content-tertiary">
+      <p className="m-0 text-base text-content-tertiary">
         Check back on {date} at {time}.
       </p>
     </div>
@@ -193,11 +193,11 @@ function BookingNotStarted({ fromDate, checkInTime }: { fromDate: string; checkI
 
 function BookingExpired() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-2 px-4">
-      <p className="m-0 text-[15px] text-content-secondary">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-3 px-6">
+      <p className="m-0 text-lg text-content-secondary font-medium">
         Thank you for staying with us!
       </p>
-      <p className="m-0 text-[13px] text-content-tertiary">
+      <p className="m-0 text-base text-content-tertiary">
         Your booking has ended.
       </p>
     </div>
@@ -228,38 +228,40 @@ function DoorControls({ bookingId }: { bookingId: string }) {
   }
 
   return (
-    <div
-      className="bg-card rounded-(--radius-card) p-10 flex flex-col items-center gap-6"
-      style={{ boxShadow: "var(--shadow-card)" }}
-    >
-      <p className="m-0 text-[11px] tracking-[0.08em] uppercase text-content-tertiary">
-        apartment &middot; booking {bookingId}
-      </p>
-
-      <div className="flex gap-3">
-        <Btn
-          onClick={() => send("building")}
-          loading={loading}
-          variant="primary"
-          label="Building"
-        />
-        <Btn
-          onClick={() => send("apartment")}
-          loading={loading}
-          variant="secondary"
-          label="Apartment"
-        />
-      </div>
-
-      {status && (
-        <p
-          className={`m-0 text-[13px] ${
-            status === "success" ? "text-content-success" : "text-content-danger"
-          }`}
-        >
-          {status === "success" ? "Sent successfully" : "Request failed"}
+    <div className="flex items-center justify-center min-h-screen px-6">
+      <div
+        className="bg-card rounded-(--radius-card) px-10 py-12 flex flex-col items-center gap-8 w-full max-w-md"
+        style={{ boxShadow: "var(--shadow-card)" }}
+      >
+        <p className="m-0 text-xs tracking-[0.08em] uppercase text-content-tertiary font-medium">
+          apartment &middot; booking {bookingId}
         </p>
-      )}
+
+        <div className="flex flex-col gap-4 w-full">
+          <Btn
+            onClick={() => send("building")}
+            loading={loading}
+            variant="primary"
+            label="Building Door"
+          />
+          <Btn
+            onClick={() => send("apartment")}
+            loading={loading}
+            variant="secondary"
+            label="Apartment Door"
+          />
+        </div>
+
+        {status && (
+          <p
+            className={`m-0 text-base font-medium ${
+              status === "success" ? "text-content-success" : "text-content-danger"
+            }`}
+          >
+            {status === "success" ? "Sent successfully" : "Request failed"}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
@@ -315,16 +317,16 @@ function Btn({
       onTouchEnd={handleTouchEnd}
       disabled={loading}
       className={`
-        flex items-center justify-center gap-2
-        px-7 py-3 min-w-[148px]
-        text-sm font-medium
+        flex items-center justify-center gap-3
+        w-full px-8 py-5
+        text-lg font-semibold
         rounded-(--radius-btn)
         transition-[opacity,transform] duration-150
         disabled:cursor-not-allowed disabled:opacity-60
         ${
           isPrimary
             ? "border-none bg-btn-primary-bg text-btn-primary-text"
-            : "bg-btn-secondary-bg text-btn-secondary-text border-[0.5px] border-btn-secondary-border"
+            : "bg-btn-secondary-bg text-btn-secondary-text border border-btn-secondary-border"
         }
       `}
       onPointerEnter={() => applyHover(true)}
@@ -347,8 +349,8 @@ function Btn({
 function Arrow({ light }: { light: boolean }) {
   return (
     <svg
-      width="15"
-      height="15"
+      width="20"
+      height="20"
       viewBox="0 0 15 15"
       fill="none"
       className="shrink-0"
@@ -356,7 +358,7 @@ function Arrow({ light }: { light: boolean }) {
       <path
         d="M2 7.5h11M8.5 3l4.5 4.5L8.5 12"
         stroke={light ? "var(--btn-primary-text)" : "var(--text-primary)"}
-        strokeWidth="1.4"
+        strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -367,8 +369,8 @@ function Arrow({ light }: { light: boolean }) {
 function Spinner({ light }: { light: boolean }) {
   return (
     <svg
-      width="15"
-      height="15"
+      width="20"
+      height="20"
       viewBox="0 0 15 15"
       fill="none"
       className="shrink-0 animate-spin"
@@ -378,12 +380,12 @@ function Spinner({ light }: { light: boolean }) {
         cy="7.5"
         r="5.5"
         stroke={light ? "rgba(255,255,255,0.35)" : "var(--spinner-accent)"}
-        strokeWidth="1.4"
+        strokeWidth="1.6"
       />
       <path
         d="M7.5 2a5.5 5.5 0 0 1 5.5 5.5"
         stroke={light ? "var(--btn-primary-text)" : "var(--spinner-accent)"}
-        strokeWidth="1.4"
+        strokeWidth="1.6"
         strokeLinecap="round"
       />
     </svg>
