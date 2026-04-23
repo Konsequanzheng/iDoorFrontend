@@ -64,39 +64,61 @@ export default function HomeClient({
     router.push(`/?bookingId=${encodeURIComponent(id)}`);
   };
 
-  if (state.kind === "loading") {
-    return <Loading />;
-  }
-
-  if (state.kind === "no_booking_id") {
-    return <BookingIdForm onSubmit={handleSubmit} />;
-  }
-
-  switch (state.data.status) {
-    case "not_found":
-      return (
-        <BookingIdForm onSubmit={handleSubmit} error="Booking not found" />
-      );
-    case "not_started":
-      return <BookingNotStarted fromDate={state.data.fromDate!} checkInTime={state.data.checkInTime!} />;
-    case "expired":
-      return <BookingExpired />;
-    case "valid":
-      return <DoorControls bookingId={state.data.bookingId} />;
-  }
+  return (
+    <>
+      {state.kind === "loading" && <Loading />}
+      {state.kind === "no_booking_id" && (
+        <BookingIdForm onSubmit={handleSubmit} />
+      )}
+      {state.kind === "result" &&
+        (() => {
+          switch (state.data.status) {
+            case "not_found":
+              return (
+                <BookingIdForm onSubmit={handleSubmit} error="Booking not found" />
+              );
+            case "not_started":
+              return (
+                <BookingNotStarted
+                  fromDate={state.data.fromDate!}
+                  checkInTime={state.data.checkInTime!}
+                />
+              );
+            case "expired":
+              return <BookingExpired />;
+            case "valid":
+              return <DoorControls bookingId={state.data.bookingId} />;
+          }
+        })()}
+    </>
+  );
 }
 
 function Loading() {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-      }}
-    >
-      <Spinner light={false} />
+    <div className="flex items-center justify-center min-h-screen">
+      <svg
+        width="32"
+        height="32"
+        viewBox="0 0 15 15"
+        fill="none"
+        className="animate-spin"
+      >
+        <circle
+          cx="7.5"
+          cy="7.5"
+          r="5.5"
+          stroke="var(--spinner-accent)"
+          strokeWidth="1.4"
+          opacity="0.3"
+        />
+        <path
+          d="M7.5 2a5.5 5.5 0 0 1 5.5 5.5"
+          stroke="var(--spinner-accent)"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+      </svg>
     </div>
   );
 }
@@ -118,70 +140,28 @@ function BookingIdForm({
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        gap: "1rem",
-      }}
-    >
-      <p
-        style={{
-          margin: 0,
-          fontSize: "14px",
-          color: "var(--color-text-secondary, #666)",
-        }}
-      >
+    <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4">
+      <p className="m-0 text-sm text-content-secondary">
         Enter your booking ID to continue
       </p>
-      <form onSubmit={handleSubmit} style={{ display: "flex", gap: "8px" }}>
+      <form onSubmit={handleSubmit} className="flex gap-2">
         <input
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="e.g. abc123"
-          style={{
-            padding: "10px 16px",
-            borderRadius: "100px",
-            border: "0.5px solid var(--color-border-secondary, #ddd)",
-            fontSize: "14px",
-            outline: "none",
-            width: "200px",
-            background: "var(--color-background-primary, #fff)",
-            color: "var(--color-text-primary, #111)",
-          }}
+          className="px-4 py-2.5 w-[200px] text-sm outline-none bg-input-bg text-foreground border-[0.5px] border-border-default rounded-(--radius-input) placeholder:text-content-tertiary"
         />
         <button
           type="submit"
           disabled={!value.trim()}
-          style={{
-            padding: "10px 20px",
-            borderRadius: "100px",
-            border: "none",
-            background: "#111",
-            color: "#fff",
-            fontSize: "14px",
-            fontWeight: 500,
-            cursor: value.trim() ? "pointer" : "not-allowed",
-            opacity: value.trim() ? 1 : 0.6,
-          }}
+          className="px-5 py-2.5 rounded-(--radius-btn) border-none bg-btn-primary-bg text-btn-primary-text text-sm font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 transition-opacity"
         >
           Go
         </button>
       </form>
       {error && (
-        <p
-          style={{
-            margin: 0,
-            fontSize: "13px",
-            color: "var(--color-text-danger, #dc2626)",
-          }}
-        >
-          {error}
-        </p>
+        <p className="m-0 text-[13px] text-content-danger">{error}</p>
       )}
     </div>
   );
@@ -200,32 +180,11 @@ function BookingNotStarted({ fromDate, checkInTime }: { fromDate: string; checkI
   });
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        gap: "0.5rem",
-      }}
-    >
-      <p
-        style={{
-          margin: 0,
-          fontSize: "15px",
-          color: "var(--color-text-secondary, #666)",
-        }}
-      >
+    <div className="flex flex-col items-center justify-center min-h-screen gap-2 px-4">
+      <p className="m-0 text-[15px] text-content-secondary">
         Your booking window hasn&apos;t started yet.
       </p>
-      <p
-        style={{
-          margin: 0,
-          fontSize: "13px",
-          color: "var(--color-text-tertiary, #999)",
-        }}
-      >
+      <p className="m-0 text-[13px] text-content-tertiary">
         Check back on {date} at {time}.
       </p>
     </div>
@@ -234,32 +193,11 @@ function BookingNotStarted({ fromDate, checkInTime }: { fromDate: string; checkI
 
 function BookingExpired() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        gap: "0.5rem",
-      }}
-    >
-      <p
-        style={{
-          margin: 0,
-          fontSize: "15px",
-          color: "var(--color-text-secondary, #666)",
-        }}
-      >
+    <div className="flex flex-col items-center justify-center min-h-screen gap-2 px-4">
+      <p className="m-0 text-[15px] text-content-secondary">
         Thank you for staying with us!
       </p>
-      <p
-        style={{
-          margin: 0,
-          fontSize: "13px",
-          color: "var(--color-text-tertiary, #999)",
-        }}
-      >
+      <p className="m-0 text-[13px] text-content-tertiary">
         Your booking has ended.
       </p>
     </div>
@@ -291,29 +229,14 @@ function DoorControls({ bookingId }: { bookingId: string }) {
 
   return (
     <div
-      style={{
-        background: "var(--color-background-secondary, #f5f5f5)",
-        borderRadius: "20px",
-        padding: "2.5rem",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "1.5rem",
-      }}
+      className="bg-card rounded-(--radius-card) p-10 flex flex-col items-center gap-6"
+      style={{ boxShadow: "var(--shadow-card)" }}
     >
-      <p
-        style={{
-          margin: 0,
-          fontSize: "11px",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: "var(--color-text-tertiary, #999)",
-        }}
-      >
+      <p className="m-0 text-[11px] tracking-[0.08em] uppercase text-content-tertiary">
         apartment &middot; booking {bookingId}
       </p>
 
-      <div style={{ display: "flex", gap: "12px" }}>
+      <div className="flex gap-3">
         <Btn
           onClick={() => send("building")}
           loading={loading}
@@ -330,18 +253,11 @@ function DoorControls({ bookingId }: { bookingId: string }) {
 
       {status && (
         <p
-          style={{
-            margin: 0,
-            fontSize: "13px",
-            color:
-              status === "success"
-                ? "var(--color-text-success, #16a34a)"
-                : "var(--color-text-danger, #dc2626)",
-          }}
+          className={`m-0 text-[13px] ${
+            status === "success" ? "text-content-success" : "text-content-danger"
+          }`}
         >
-          {status === "success"
-            ? "Sent successfully"
-            : "Request failed"}
+          {status === "success" ? "Sent successfully" : "Request failed"}
         </p>
       )}
     </div>
@@ -361,6 +277,7 @@ function Btn({
 }) {
   const isPrimary = variant === "primary";
   const touchHandled = useRef(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   const handleClick = () => {
     if (touchHandled.current) {
@@ -376,55 +293,50 @@ function Btn({
     onClick();
   };
 
+  const applyHover = (active: boolean) => {
+    if (!btnRef.current || loading) return;
+    btnRef.current.style.opacity = active
+      ? "var(--btn-hover-opacity)"
+      : loading ? "0.6" : "1";
+  };
+
+  const applyPress = (pressed: boolean) => {
+    if (!btnRef.current || loading) return;
+    btnRef.current.style.transform = pressed
+      ? "scale(var(--btn-press-scale))"
+      : "scale(1)";
+  };
+
   return (
     <button
+      ref={btnRef}
       type="button"
       onClick={handleClick}
       onTouchEnd={handleTouchEnd}
       disabled={loading}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "8px",
-        padding: "13px 28px",
-        minWidth: "148px",
-        fontSize: "14px",
-        fontWeight: 500,
-        borderRadius: "100px",
-        border: isPrimary
-          ? "none"
-          : "0.5px solid var(--color-border-secondary, #ddd)",
-        background: isPrimary
-          ? "#111"
-          : "var(--color-background-primary, #fff)",
-        color: isPrimary ? "#fff" : "var(--color-text-primary, #111)",
-        cursor: loading ? "not-allowed" : "pointer",
-        opacity: loading ? 0.6 : 1,
-        transition: "opacity 0.15s, transform 0.12s",
+      className={`
+        flex items-center justify-center gap-2
+        px-7 py-3 min-w-[148px]
+        text-sm font-medium
+        rounded-(--radius-btn)
+        transition-[opacity,transform] duration-150
+        disabled:cursor-not-allowed disabled:opacity-60
+        ${
+          isPrimary
+            ? "border-none bg-btn-primary-bg text-btn-primary-text"
+            : "bg-btn-secondary-bg text-btn-secondary-text border-[0.5px] border-btn-secondary-border"
+        }
+      `}
+      onPointerEnter={() => applyHover(true)}
+      onPointerLeave={() => {
+        applyHover(false);
+        applyPress(false);
       }}
-      onPointerEnter={(e) => {
-        if (!loading) e.currentTarget.style.opacity = "0.8";
-      }}
-      onPointerLeave={(e) => {
-        e.currentTarget.style.opacity = loading ? "0.6" : "1";
-        e.currentTarget.style.transform = "scale(1)";
-      }}
-      onPointerDown={(e) => {
-        if (!loading) e.currentTarget.style.transform = "scale(0.97)";
-      }}
-      onPointerUp={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-      }}
-      onPointerCancel={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-      }}
-      onTouchStart={(e) => {
-        if (!loading) e.currentTarget.style.transform = "scale(0.97)";
-      }}
-      onTouchCancel={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-      }}
+      onPointerDown={() => applyPress(true)}
+      onPointerUp={() => applyPress(false)}
+      onPointerCancel={() => applyPress(false)}
+      onTouchStart={() => applyPress(true)}
+      onTouchCancel={() => applyPress(false)}
     >
       {loading ? <Spinner light={isPrimary} /> : <Arrow light={isPrimary} />}
       {label}
@@ -439,11 +351,11 @@ function Arrow({ light }: { light: boolean }) {
       height="15"
       viewBox="0 0 15 15"
       fill="none"
-      style={{ flexShrink: 0 }}
+      className="shrink-0"
     >
       <path
         d="M2 7.5h11M8.5 3l4.5 4.5L8.5 12"
-        stroke={light ? "#fff" : "currentColor"}
+        stroke={light ? "var(--btn-primary-text)" : "var(--text-primary)"}
         strokeWidth="1.4"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -459,19 +371,18 @@ function Spinner({ light }: { light: boolean }) {
       height="15"
       viewBox="0 0 15 15"
       fill="none"
-      style={{ flexShrink: 0, animation: "spin 0.75s linear infinite" }}
+      className="shrink-0 animate-spin"
     >
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       <circle
         cx="7.5"
         cy="7.5"
         r="5.5"
-        stroke={light ? "rgba(255,255,255,0.35)" : "currentColor"}
+        stroke={light ? "rgba(255,255,255,0.35)" : "var(--spinner-accent)"}
         strokeWidth="1.4"
       />
       <path
         d="M7.5 2a5.5 5.5 0 0 1 5.5 5.5"
-        stroke={light ? "#fff" : "currentColor"}
+        stroke={light ? "var(--btn-primary-text)" : "var(--spinner-accent)"}
         strokeWidth="1.4"
         strokeLinecap="round"
       />
