@@ -60,6 +60,11 @@ export async function validateBooking(
 
   console.log("[validateBooking] found row:", row);
 
+  if (!row.checkInTime || !row.checkOutTime) {
+    console.log("[validateBooking] missing checkInTime or checkOutTime for bookingId:", bookingId);
+    return { status: "not_found", bookingId };
+  }
+
   const now = new Date();
   const checkIn = parseCet(row.fromDate, row.checkInTime);
   const checkOut = parseCet(row.toDate, row.checkOutTime);
